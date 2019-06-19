@@ -46,7 +46,6 @@ public class PartTwoService {
 
     public List<String> getWorkWord(List<String> wordList,int num){
         List<String> workWordList = new ArrayList<>();
-//        final int WORK_WORD_NUM = 30;
         for (int i=1;i<=num;i++){
            int index = (int) (Math.random() * wordList.size());
            String word=wordList.get(index);
