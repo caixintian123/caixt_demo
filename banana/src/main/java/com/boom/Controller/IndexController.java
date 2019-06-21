@@ -3,6 +3,7 @@ package com.boom.Controller;
 import com.boom.Service.PartOneService;
 import com.boom.Service.PartThreeService;
 import com.boom.Service.PartTwoService;
+import com.boom.Utils.ReadWordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -13,8 +14,8 @@ import java.util.Map;
 @Controller
 public class IndexController {
 
-    @Autowired
-    private PartOneService partOneService;
+//    @Autowired
+//    private PartOneService partOneService;
     @Autowired
     private PartTwoService partTwoService;
     @Autowired
@@ -37,8 +38,8 @@ public class IndexController {
         final int METCH_WORD_NUM=5;
         Map<String,List<String>> quesMap =  new HashMap<String, List<String> >();
 
-        String path = this.getClass().getClassLoader().getResource("part.txt").getPath();//获取文件路径
-        List<String> list= partTwoService.readSrcWord(path);//得到所有词库
+        String path = this.getClass().getClassLoader().getResource("part1.txt").getPath();//获取文件路径
+        List<String> list= ReadWordUtils.readSrcWord(path);//得到所有词库
         System.out.println(" ");
         System.out.println("---------------getWorkWord----------------");
 
@@ -95,8 +96,8 @@ public class IndexController {
         final int METCH_WORD_NUM=5;
         Map<String,List<String>> quesMap =  new HashMap<String, List<String> >();
 
-        String path = this.getClass().getClassLoader().getResource("part.txt").getPath();//获取文件路径
-        List<String> list= partTwoService.readSrcWord(path);//得到所有词库
+        String path = this.getClass().getClassLoader().getResource("part1.txt").getPath();//获取文件路径
+        List<String> list= ReadWordUtils.readSrcWord(path);//得到所有词库
         System.out.println(" ");
         System.out.println("---------------getWorkWord----------------");
 
@@ -144,7 +145,28 @@ public class IndexController {
         }
         return answerMap;
     }
+    //part2
+    public Map<String,List<String>> getPart3Ques(){
+        String[] keyArr = {"人","生","若","只","如","初","见"};
+        String[] valArr = {"r","s","r2","z","r3","c","j"};
 
+        return null;
+    }
+    public Map<String,String> getPart3Answ(Map<String,List<String>> map){
+        Map<String, String> answerMap = new HashMap<> ();
+        List<String> trunkWordList = map.get("trunk");//得到题干词库
+        for (int cnt = 1;cnt<=map.size()-1; cnt++){
+            int wordCnt=0;
+            List<String>matchList = map.get("ques"+cnt);
+            for (String word:matchList) {
+                if (trunkWordList.contains(word)){
+                    wordCnt++;
+                }
+            }
+            answerMap.put("answ"+cnt,transferAnsw(wordCnt));
+        }
+        return answerMap;
+    }
     private String transferAnsw(int cnt){
         String answer ="";
         switch (cnt){
