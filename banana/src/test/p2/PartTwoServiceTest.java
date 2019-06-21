@@ -2,12 +2,12 @@ package p2;
 
 import com.boom.Controller.IndexController;
 import com.boom.Service.PartTwoService;
+import com.boom.Utils.BananaUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import test.BaseJunit4Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class PartTwoServiceTest extends BaseJunit4Test {
 
 
         String path = this.getClass().getClassLoader().getResource("part.txt").getPath();//获取文件路径
-        List<String> list= partTwoService.readSrcWord(path);
+        List<String> list= BananaUtils.readSrcWord(path);
         System.out.println(" ");
         System.out.println("---------------getWorkWord----------------");
 
@@ -60,8 +60,4 @@ public class PartTwoServiceTest extends BaseJunit4Test {
 
     }
 
-    @Test
-    public void dop2(){
-        controller.doTest();
-    }
 }

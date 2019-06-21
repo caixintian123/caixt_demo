@@ -1,16 +1,19 @@
 package com.boom.Controller;
 
-import com.boom.Service.PartOneService;
 import com.boom.Service.PartThreeService;
 import com.boom.Service.PartTwoService;
-import com.boom.Utils.ReadWordUtils;
+import com.boom.Utils.BananaUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import com.boom.Domain.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@RequestMapping("/index")
 @Controller
 public class IndexController {
 
@@ -21,12 +24,36 @@ public class IndexController {
     @Autowired
     private PartThreeService partThreeService;
 
-    public void doTest() {
-//        Map<String,List<String>>part2QuesMap =  getPart2Ques();
-//        Map<String,String>part2AnswMap = getPart2Answ(part2QuesMap);
-//        System.out.println("题目1："+part2QuesMap.get("trunk").toString());
+    @RequestMapping("/doJob")
+    public void doJob(HttpServletRequest request){
+
+       Interval[] a = initIntervalArr(request);
+       boolean flag = BananaUtils.judgeOverlap(a);
+       System.out.println("是有合法："+flag);
+
+    }
 
 
+    public Interval[] initIntervalArr(HttpServletRequest request){
+        final String KEY ="rank";
+        List<Integer> tempList = new ArrayList<Integer>();
+        Interval[] intervals = new Interval[10];
+        int cnt = 0;
+
+        for (int x=1;x<=5;x++){
+            for (int y=1;y<=4;y++){
+                int val = Integer.parseInt(request.getParameter(KEY+x+"_"+y));
+                tempList.add(val);
+            }
+            Interval interval1 = new Interval(tempList.get(0),tempList.get(1));
+            intervals [cnt] = interval1;
+            cnt++;
+            Interval interval2 = new Interval(tempList.get(2),tempList.get(3));
+            intervals [cnt] = interval2;
+            cnt++;
+            tempList.clear();
+        }
+        return intervals;
     }
 
 
@@ -39,7 +66,7 @@ public class IndexController {
         Map<String,List<String>> quesMap =  new HashMap<String, List<String> >();
 
         String path = this.getClass().getClassLoader().getResource("part1.txt").getPath();//获取文件路径
-        List<String> list= ReadWordUtils.readSrcWord(path);//得到所有词库
+        List<String> list= BananaUtils.readSrcWord(path);//得到所有词库
         System.out.println(" ");
         System.out.println("---------------getWorkWord----------------");
 
@@ -97,7 +124,7 @@ public class IndexController {
         Map<String,List<String>> quesMap =  new HashMap<String, List<String> >();
 
         String path = this.getClass().getClassLoader().getResource("part1.txt").getPath();//获取文件路径
-        List<String> list= ReadWordUtils.readSrcWord(path);//得到所有词库
+        List<String> list= BananaUtils.readSrcWord(path);//得到所有词库
         System.out.println(" ");
         System.out.println("---------------getWorkWord----------------");
 
