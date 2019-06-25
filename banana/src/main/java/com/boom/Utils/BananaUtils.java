@@ -17,7 +17,7 @@ public class BananaUtils {
             //InputStreamReader 是字节流通向字符流的桥梁,它将字节流转换为字符流.
             InputStreamReader in=null;
             try {
-                in = new InputStreamReader(new FileInputStream(path),"gbk");
+                in = new InputStreamReader(new FileInputStream(path),"UTF-8");
             } catch (UnsupportedEncodingException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
