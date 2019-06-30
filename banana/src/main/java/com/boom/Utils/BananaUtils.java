@@ -2,11 +2,12 @@ package com.boom.Utils;
 
 import com.boom.Domain.Interval;
 import com.boom.Domain.Point;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 
 public class BananaUtils {
@@ -95,4 +96,49 @@ public class BananaUtils {
         }
         return true;
     }
+
+
+    public static void output(String path, Interval[] intervals) throws Exception{
+
+
+        /** 初始化配置文件 **/
+        Configuration configuration = new Configuration();
+        /** 设置编码 **/
+        configuration.setDefaultEncoding("utf-8");
+        /** 我的ftl文件是放在D盘的**/
+//        String fileDirectory = "/Users/caixintian/Documents/doc";
+        /** 加载文件 **/
+        configuration.setDirectoryForTemplateLoading(new File(path));
+        /** 加载模板 **/
+        Template template = configuration.getTemplate("temp.ftl");
+        /** 准备数据 **/
+//        Map<String,List<Interval>> dataMap = new HashMap<>();
+        Map<String,String> dataMap = new HashMap<>();
+
+        /** 表格数据初始化 **/
+//        List<Interval> intervalList = new ArrayList<>();
+//        intervalList.add(new Interval("100424060","小毅","男","25"));
+//        intervalList.add(new Interval("100424030","小兰","女","25"));
+        List<Interval>intervalList = Arrays.asList(intervals);
+        /** 表格数据 studentList和freemarker标签要对应**/
+//        dataMap.put("IntervalList",intervalList);
+        dataMap.put("apple","apple");
+//        dataMap.put("oragle","apple");
+
+        /** 指定输出word文件的路径 **/
+        String outFilePath = "\\Users\\caixintian\\Documents\\doc\\myFreeMarker.doc";
+        File docFile = new File(outFilePath);
+        FileOutputStream fos = new FileOutputStream(docFile);
+        Writer out = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"),10240);
+//        dataMap.put("oragle","oragle");
+//        out = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"),10240);
+        try{template.process(dataMap,out);}catch (Exception e){}
+
+
+        if(out != null){
+            out.close();
+        }
+    }
+
+
 }
