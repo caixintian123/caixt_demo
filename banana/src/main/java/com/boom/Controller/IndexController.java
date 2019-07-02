@@ -1,11 +1,11 @@
 package com.boom.Controller;
 
-import com.boom.Service.PartThreeService;
 import com.boom.Service.PartTwoService;
 import com.boom.Utils.BananaUtils;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.*;
 
@@ -29,7 +30,17 @@ public class IndexController {
     @RequestMapping(value="/doJob",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
     public ModelAndView doJob(HttpServletRequest request) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
-        String msg="你成功导出文档了，牛逼！";
+
+
+        String doc = request.getParameter("savePath");
+        String msg="";
+            if (StringUtils.isEmpty(doc)){
+                msg="请检查保存路径";
+                modelAndView.addObject("msg",msg);
+                modelAndView.setViewName("advice");
+                return modelAndView;
+            }
+
         int part1AnswerCnt = 0;
         int part2AnswerCnt = 0;
         int part3AnswerCnt = 0;
@@ -44,51 +55,81 @@ public class IndexController {
             return modelAndView;
         }
         //1
-        List<PartOneResult> part1Results = initIntervalArr(request);
-        part1Results= getPart1Answ(part1Results,part1AnswerCnt);
-        String path = String.valueOf(this.getClass().getClassLoader().getResource(""));//获取文件路径
-        Map<String,Object> dataMap = new HashMap<>();
-        String doc = "D:/wuxie/example.doc";
-        dataMap.put("part1Results",part1Results);
-
+        Map<String, Object> dataMap = new HashMap<>();
+        try {
+            List<PartOneResult> part1Results = initIntervalArr(request);
+            part1Results = getPart1Answ(part1Results, part1AnswerCnt);
+            dataMap.put("part1Results", part1Results);
+        }catch (Exception e){
+            msg="请检查第一题赋值";
+            modelAndView.addObject("msg",msg);
+            modelAndView.setViewName("advice");
+            return modelAndView;
+        }
         //2
-        List<PartTwoResult> part2Result = initP2Result(request,part2AnswerCnt);
-        dataMap.put("part2Result",part2Result);
-
-        //3
-        List<PartThreeResult> resultList = initWordStrArr(request);
-        getPart3Answ(resultList,part3AnswerCnt);
-
-        for (PartThreeResult result:resultList){
-            List<Part3Print> part3PrintList = result.getPart3PrintList();
-            for (Part3Print print:part3PrintList){
-                String[] p3m = new String[5];
-                System.out.println("key= " + print.getQuesTrunk() + " and value= " + print.getAnswer());
-                int intKey = (int)(Math.random()*5);
-                String p3answer = transferAnsw(intKey);
-                for (int k=0;k<5;k++){
-                    if (k!=intKey){
-                        p3m[k] = sortString(print.getAnswer());
-                        while (p3m[k].equals(print.getAnswer())){
-                            p3m[k] = sortString(print.getAnswer());
-                        }
-                    }
-                    if (k==intKey){
-                        p3m[k] = print.getAnswer();
-                    }
-                }
-                print.setChooseA(p3m[0]);
-                print.setChooseB(p3m[1]);
-                print.setChooseC(p3m[2]);
-                print.setChooseD(p3m[3]);
-                print.setChooseE(p3m[4]);
-                print.setAnswer(p3answer);
-            }
+        try {
+            List<PartTwoResult> part2Result = initP2Result(request,part2AnswerCnt);
+            dataMap.put("part2Result",part2Result);
+        }catch (Exception e){
+            msg="请检查第二题赋值";
+            modelAndView.addObject("msg",msg);
+            modelAndView.setViewName("advice");
+            return modelAndView;
         }
 
-        dataMap.put("p3resultList",resultList);
-        createDoc(dataMap,doc,path);
+
+
+        //3
+
+        try {
+            List<PartThreeResult> resultList = initWordStrArr(request);
+            getPart3Answ(resultList,part3AnswerCnt);
+
+            for (PartThreeResult result:resultList){
+                List<Part3Print> part3PrintList = result.getPart3PrintList();
+                for (Part3Print print:part3PrintList){
+                    String[] p3m = new String[5];
+                    System.out.println("key= " + print.getQuesTrunk() + " and value= " + print.getAnswer());
+                    int intKey = (int)(Math.random()*5);
+                    String p3answer = transferAnsw(intKey);
+                    for (int k=0;k<5;k++){
+                        if (k!=intKey){
+                            p3m[k] = sortString(print.getAnswer());
+                            while (p3m[k].equals(print.getAnswer())){
+                                p3m[k] = sortString(print.getAnswer());
+                            }
+                        }
+                        if (k==intKey){
+                            p3m[k] = print.getAnswer();
+                        }
+                    }
+                    print.setChooseA(p3m[0]);
+                    print.setChooseB(p3m[1]);
+                    print.setChooseC(p3m[2]);
+                    print.setChooseD(p3m[3]);
+                    print.setChooseE(p3m[4]);
+                    print.setAnswer(p3answer);
+                }
+            }
+
+            dataMap.put("p3resultList",resultList);
+        }catch (Exception e){
+            msg="请检查第三题赋值";
+            modelAndView.addObject("msg",msg);
+            modelAndView.setViewName("advice");
+            return modelAndView;
+        }
+
+        createDoc(dataMap,doc);
+        msg="成功导出文档，路径为:"+doc;
+        modelAndView.addObject("msg",msg);
+        modelAndView.setViewName("advice");
         return modelAndView;
+    }
+
+    @RequestMapping(value="/toIndex",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
+    public void toIndex(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.sendRedirect("/index.jsp");
     }
 
     public void initQues(PartOneResult result, int num){
@@ -177,7 +218,7 @@ public class IndexController {
         final int METCH_WORD_NUM=5;
         Map<String,List<String>> quesMap =  new HashMap<String, List<String> >();
 
-        String path = this.getClass().getClassLoader().getResource("part1.txt").getPath();//获取文件路径
+        String path = this.getClass().getClassLoader().getResource("/part2.txt").getPath();//获取文件路径
         List<String> list= BananaUtils.readSrcWord(path);//得到所有词库
         System.out.println(" ");
         System.out.println("---------------getWorkWord----------------");
@@ -228,7 +269,7 @@ public class IndexController {
         final int METCH_WORD_NUM=5;
         Map<String,List<String>> quesMap =  new HashMap<String, List<String> >();
 
-        String path = this.getClass().getClassLoader().getResource("part1.txt").getPath();//获取文件路径
+        String path = this.getClass().getClassLoader().getResource("/part2.txt").getPath();//获取文件路径
         List<String> list= BananaUtils.readSrcWord(path);//得到所有词库
         System.out.println(" ");
         System.out.println("---------------getWorkWord----------------");
@@ -264,7 +305,9 @@ public class IndexController {
     }
     public void getPart2Answ(PartTwoResult result,int num){
         List<String> trunkWordList = Arrays.asList(result.getWordTrunk());
-        String mistakePath = this.getClass().getClassLoader().getResource("part1.txt").getPath();//获取文件路径
+        String mistakePath = this.getClass().getClassLoader().getResource("part2.txt").getPath();//获取文件路径
+        System.out.println("the dirPath of part2.txt:"+mistakePath);
+
         Map<String, String> answerMap = new HashMap<> ();
         List<String>  misStringList= BananaUtils.readSrcWord(mistakePath);
         List<Answer> answers= new ArrayList<>();
@@ -367,7 +410,7 @@ public class IndexController {
         return  out;
     }
 
-    public  void createDoc(Map<String,Object> dataMap,String fileName,String path) throws IOException {
+    public  void createDoc(Map<String,Object> dataMap,String fileName) throws IOException {
         Configuration configuration = new Configuration();
         configuration.setDefaultEncoding("utf-8");
         //dataMap 要填入模本的数据文件
@@ -376,8 +419,9 @@ public class IndexController {
         /** 加载文件 **/
 //        configuration.setClassForTemplateLoading(this.getClass(), "/template");
 
-        String templateFolder = this.getClass().getClassLoader().getResource("part1.txt").getPath();
-        configuration.setDirectoryForTemplateLoading(new File(templateFolder.substring(0,templateFolder.length()-9)));
+        String templateFolder = this.getClass().getClassLoader().getResource("").getPath();
+        System.out.println(this.getClass().getClassLoader().getResource("").getPath());
+        configuration.setDirectoryForTemplateLoading(new File(templateFolder));
 
         Template t=null;
         try {
@@ -420,7 +464,7 @@ public class IndexController {
             PartTwoResult result = new PartTwoResult();
             String q2trunk =  new String(request.getParameter("q2Trunk_"+i).getBytes("iso-8859-1"),"utf-8");
             String[] q2trunks = q2trunk.split("\\s");
-            if (q2trunk.length()!=15){
+            if (!(15 == q2trunks.length)){
                 String msg = "好好数数你输了几个单词，要15个！";
             }
             result.setWordTrunk(q2trunks);

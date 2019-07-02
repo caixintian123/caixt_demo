@@ -33,7 +33,7 @@
     }
 </style>
 <body>
-<div style="height: 100px; padding: 20px 0px 10px 30px">
+<div style="height: 500px; padding: 20px 0px 10px 30px">
     <form id="queryForm" method="post" action="/index/doJob">
         <%--<table  style="width: 60%; height: 70%; border: 0px; font-size: 12px;padding-bottom: 30px">--%>
         <table class="table">
@@ -44,133 +44,138 @@
                 <td><input id="part2AnswerCnt" name="part2AnswerCnt" style="width: 155px;" data-option="required:true"/></td>
                 <td><label for="part3AnswerCnt">第三题需要几个匹配答案</label></td>
                 <td><input id="part3AnswerCnt" name="part3AnswerCnt" style="width: 155px;" data-option="required:true"/></td>
+                <td><label for="savePath">保存路径(参考 D://data/xx.doc)</label></td>
+                <td><input id="savePath" name="savePath" style="width: 155px;" data-option="required:true"/></td>
+
             </tr>
         </table>
             <div style="text-align:center; vertical-align:middle;height: 50px"></div>
+            <div style="height: 50px;padding-top: 50px;text-align:center; vertical-align:middle;"><label>第一题输入框</label></div>
 
         <table class="table">
             <tr id="rank11">
                 <td><label for="rank11_1">范围组一:</label></td>
-                <td><input id="rank11_1" name="rank11_1" style="width: 155px;" data-option="required:true" value="1"/></td>
+                <td><input id="rank11_1" name="rank11_1" style="width: 155px;" data-option="required:true" /></td>
                 <td><label for="rank11_2">至:</label></td>
-                <td><input id="rank11_2" name="rank11_2" style="width: 155px;" data-option="required:true" value="10"/></td>
+                <td><input id="rank11_2" name="rank11_2" style="width: 155px;" data-option="required:true" /></td>
                 <td><label for="rank11_3">和</label></td>
-                <td><input id="rank11_3" name="rank11_3" style="width: 155px;" data-option="required:true" value="13"/></td>
+                <td><input id="rank11_3" name="rank11_3" style="width: 155px;" data-option="required:true" /></td>
                 <td><label for="rank11_4">至:</label></td>
-                <td><input id="rank11_4" name="rank11_4" style="width: 155px;" data-option="required:true" value="24"/></td>
+                <td><input id="rank11_4" name="rank11_4" style="width: 155px;" data-option="required:true" /></td>
             </tr>
             <tr id="rank2">
                 <td><label for="rank12_1">范围组二:</label></td>
-                <td><input id="rank12_1" name="rank12_1" style="width: 155px;" data-option="required:true" value="35"/></td>
+                <td><input id="rank12_1" name="rank12_1" style="width: 155px;" data-option="required:true" /></td>
                 <td><label for="rank12_2">至:</label></td>
-                <td><input id="rank12_2" name="rank12_2" style="width: 155px;" data-option="required:true" value="46"/></td>
+                <td><input id="rank12_2" name="rank12_2" style="width: 155px;" data-option="required:true" /></td>
                 <td><label for="rank12_3">和</label></td>
-                <td><input id="rank12_3" name="rank12_3" style="width: 155px;" data-option="required:true" value="57"/></td>
+                <td><input id="rank12_3" name="rank12_3" style="width: 155px;" data-option="required:true" /></td>
                 <td><label for="rank12_4">至:</label></td>
-                <td><input id="rank12_4" name="rank12_4" style="width: 155px;" data-option="required:true" value="68"/></td>
+                <td><input id="rank12_4" name="rank12_4" style="width: 155px;" data-option="required:true" /></td>
             </tr>
             <tr id="rank3">
                 <td><label for="rank13_1">范围组三:</label></td>
-                <td><input id="rank13_1" name="rank13_1" style="width: 155px;" data-option="required:true" value="79"/></td>
+                <td><input id="rank13_1" name="rank13_1" style="width: 155px;" data-option="required:true" /></td>
                 <td><label for="rank13_2">至:</label></td>
-                <td><input id="rank13_2" name="rank13_2" style="width: 155px;" data-option="required:true" value="81"/></td>
+                <td><input id="rank13_2" name="rank13_2" style="width: 155px;" data-option="required:true" /></td>
                 <td><label for="rank13_3">和</label></td>
-                <td><input id="rank13_3" name="rank13_3" style="width: 155px;" data-option="required:true" value="91"/></td>
+                <td><input id="rank13_3" name="rank13_3" style="width: 155px;" data-option="required:true" /></td>
                 <td><label for="rank13_4">至:</label></td>
-                <td><input id="rank13_4" name="rank13_4" style="width: 155px;" data-option="required:true" value="101"/></td>
+                <td><input id="rank13_4" name="rank13_4" style="width: 155px;" data-option="required:true" /></td>
             </tr>
             <tr id="rank4">
                 <td><label for="rank14_1">范围组四:</label></td>
-                <td><input id="rank14_1" name="rank14_1" style="width: 155px;" data-option="required:true" value="121"/></td>
+                <td><input id="rank14_1" name="rank14_1" style="width: 155px;" data-option="required:true" /></td>
                 <td><label for="rank14_2">至:</label></td>
-                <td><input id="rank14_2" name="rank14_2" style="width: 155px;" data-option="required:true" value="151"/></td>
+                <td><input id="rank14_2" name="rank14_2" style="width: 155px;" data-option="required:true" /></td>
                 <td><label for="rank14_3">和</label></td>
-                <td><input id="rank14_3" name="rank14_3" style="width: 155px;" data-option="required:true" value="211"/></td>
+                <td><input id="rank14_3" name="rank14_3" style="width: 155px;" data-option="required:true" /></td>
                 <td><label for="rank14_4">至:</label></td>
-                <td><input id="rank14_4" name="rank14_4" style="width: 155px;" data-option="required:true" value="301"/></td>
+                <td><input id="rank14_4" name="rank14_4" style="width: 155px;" data-option="required:true" /></td>
         </tr>
             <tr id="rank5">
                 <td><label for="rank15_1">范围组五:</label></td>
-                <td><input id="rank15_1" name="rank15_1" style="width: 155px;" data-option="required:true" value="501"/></td>
+                <td><input id="rank15_1" name="rank15_1" style="width: 155px;" data-option="required:true" /></td>
                 <td><label for="rank15_2">至:</label></td>
-                <td><input id="rank15_2" name="rank15_2" style="width: 155px;" data-option="required:true" value="601"/></td>
+                <td><input id="rank15_2" name="rank15_2" style="width: 155px;" data-option="required:true" /></td>
                 <td><label for="rank15_3">和</label></td>
-                <td><input id="rank15_3" name="rank15_3" style="width: 155px;" data-option="required:true" value="701"/></td>
+                <td><input id="rank15_3" name="rank15_3" style="width: 155px;" data-option="required:true" /></td>
                 <td><label for="rank15_4">至:</label></td>
-                <td><input id="rank15_4" name="rank15_4" style="width: 155px;" data-option="required:true" value="801"/></td>
+                <td><input id="rank15_4" name="rank15_4" style="width: 155px;" data-option="required:true" /></td>
 
             </tr>
         </table>
+            <div style="height: 50px;padding-top: 50px;text-align:center; vertical-align:middle;"><label>第一题输入框</label></div>
 
         <table class="table">
                 <tr id="rank6">
                     <td><label for="rank21_1">范围组一:</label></td>
-                    <td><input id="rank21_1" name="rank21_1" style="width: 155px;" data-option="required:true" value="1"/></td>
+                    <td><input id="rank21_1" name="rank21_1" style="width: 155px;" data-option="required:true" /></td>
                     <td><label for="rank21_2">至:</label></td>
-                    <td><input id="rank21_2" name="rank21_2" style="width: 155px;" data-option="required:true" value="10"/></td>
+                    <td><input id="rank21_2" name="rank21_2" style="width: 155px;" data-option="required:true" /></td>
                     <td><label for="rank21_3">和</label></td>
-                    <td><input id="rank21_3" name="rank21_3" style="width: 155px;" data-option="required:true" value="13"/></td>
+                    <td><input id="rank21_3" name="rank21_3" style="width: 155px;" data-option="required:true" /></td>
                     <td><label for="rank21_4">至:</label></td>
-                    <td><input id="rank21_4" name="rank21_4" style="width: 155px;" data-option="required:true" value="24"/></td>
+                    <td><input id="rank21_4" name="rank21_4" style="width: 155px;" data-option="required:true" /></td>
                 </tr>
                 <tr id="rank7">
                     <td><label for="rank22_1">范围组二:</label></td>
-                    <td><input id="rank22_1" name="rank22_1" style="width: 155px;" data-option="required:true" value="35"/></td>
+                    <td><input id="rank22_1" name="rank22_1" style="width: 155px;" data-option="required:true" /></td>
                     <td><label for="rank22_2">至:</label></td>
-                    <td><input id="rank22_2" name="rank22_2" style="width: 155px;" data-option="required:true" value="46"/></td>
+                    <td><input id="rank22_2" name="rank22_2" style="width: 155px;" data-option="required:true" /></td>
                     <td><label for="rank22_3">和</label></td>
-                    <td><input id="rank22_3" name="rank22_3" style="width: 155px;" data-option="required:true" value="57"/></td>
+                    <td><input id="rank22_3" name="rank22_3" style="width: 155px;" data-option="required:true" /></td>
                     <td><label for="rank22_4">至:</label></td>
-                    <td><input id="rank22_4" name="rank22_4" style="width: 155px;" data-option="required:true" value="68"/></td>
+                    <td><input id="rank22_4" name="rank22_4" style="width: 155px;" data-option="required:true" /></td>
                 </tr>
                 <tr id="rank8">
                     <td><label for="rank23_1">范围组三:</label></td>
-                    <td><input id="rank23_1" name="rank23_1" style="width: 155px;" data-option="required:true" value="79"/></td>
+                    <td><input id="rank23_1" name="rank23_1" style="width: 155px;" data-option="required:true" /></td>
                     <td><label for="rank23_2">至:</label></td>
-                    <td><input id="rank23_2" name="rank23_2" style="width: 155px;" data-option="required:true" value="81"/></td>
+                    <td><input id="rank23_2" name="rank23_2" style="width: 155px;" data-option="required:true" /></td>
                     <td><label for="rank23_3">和</label></td>
-                    <td><input id="rank23_3" name="rank23_3" style="width: 155px;" data-option="required:true" value="91"/></td>
+                    <td><input id="rank23_3" name="rank23_3" style="width: 155px;" data-option="required:true" /></td>
                     <td><label for="rank23_4">至:</label></td>
-                    <td><input id="rank23_4" name="rank23_4" style="width: 155px;" data-option="required:true" value="101"/></td>
+                    <td><input id="rank23_4" name="rank23_4" style="width: 155px;" data-option="required:true" /></td>
                 </tr>
                 <tr id="rank9">
                     <td><label for="rank24_1">范围组四:</label></td>
-                    <td><input id="rank24_1" name="rank24_1" style="width: 155px;" data-option="required:true" value="121"/></td>
+                    <td><input id="rank24_1" name="rank24_1" style="width: 155px;" data-option="required:true" /></td>
                     <td><label for="rank24_2">至:</label></td>
-                    <td><input id="rank24_2" name="rank24_2" style="width: 155px;" data-option="required:true" value="151"/></td>
+                    <td><input id="rank24_2" name="rank24_2" style="width: 155px;" data-option="required:true" /></td>
                     <td><label for="rank24_3">和</label></td>
-                    <td><input id="rank24_3" name="rank24_3" style="width: 155px;" data-option="required:true" value="211"/></td>
+                    <td><input id="rank24_3" name="rank24_3" style="width: 155px;" data-option="required:true" /></td>
                     <td><label for="rank24_4">至:</label></td>
-                    <td><input id="rank24_4" name="rank24_4" style="width: 155px;" data-option="required:true" value="301"/></td>
+                    <td><input id="rank24_4" name="rank24_4" style="width: 155px;" data-option="required:true" /></td>
                 </tr>
                 <tr id="rank10">
                     <td><label for="rank25_1">范围组五:</label></td>
-                    <td><input id="rank25_1" name="rank25_1" style="width: 155px;" data-option="required:true" value="501"/></td>
+                    <td><input id="rank25_1" name="rank25_1" style="width: 155px;" data-option="required:true" /></td>
                     <td><label for="rank25_2">至:</label></td>
-                    <td><input id="rank25_2" name="rank25_2" style="width: 155px;" data-option="required:true" value="601"/></td>
+                    <td><input id="rank25_2" name="rank25_2" style="width: 155px;" data-option="required:true" /></td>
                     <td><label for="rank25_3">和</label></td>
-                    <td><input id="rank25_3" name="rank25_3" style="width: 155px;" data-option="required:true" value="701"/></td>
+                    <td><input id="rank25_3" name="rank25_3" style="width: 155px;" data-option="required:true" /></td>
                     <td><label for="rank25_4">至:</label></td>
-                    <td><input id="rank25_4" name="rank25_4" style="width: 155px;" data-option="required:true" value="801"/></td>
+                    <td><input id="rank25_4" name="rank25_4" style="width: 155px;" data-option="required:true" /></td>
                 </tr>
             </table>
 
 
 
             <div style="text-align:center; vertical-align:middle;">
-                <div style="height: 50px;padding-top: 50px"><label>第二题输入框，单词之间务必用逗号隔开</label></div>
+                <div style="height: 50px;padding-top: 50px"><label>第二题输入框，单词之间务必用空格隔开</label></div>
                 <input id="q2Trunk_1" name="q2Trunk_1" type="text" value="" style="width: 40%;height: 60px;padding-bottom: 30px">
             </div>
             <div style="text-align:center; vertical-align:middle;">
-                <div style="height: 50px;padding-top: 50px"><label>第二题输入框，单词之间务必用逗号隔开</label></div>
+                <div style="height: 50px;padding-top: 50px"><label>第二题输入框，单词之间务必用空格隔开</label></div>
                 <input id="q2Trunk_2" name="q2Trunk_2" type="text" value="" style="width: 40%;height: 60px;padding-bottom: 30px">
             </div>
             <div style="text-align:center; vertical-align:middle;">
-            <button id="addP2Btn" name="addP2Btn">新增</button>
+            <%--<button id="addP2Btn" name="addP2Btn">新增（暂未开放）</button>--%>
             </div>
             <div style="text-align:center; vertical-align:middle;">
 
-        <h5 style="align-content: center">第二题输入框，单词之间务必用逗号隔开</h5>
+        <h5 style="align-content: center">第三题</h5>
 
         <table  style="border: 0px; font-size: 12px;padding-bottom: 30px">
             <tr id="word1">
@@ -194,7 +199,7 @@
                 <td><input id="str1_7"  name="str1_7"  style="width: 60px;height: 30px" data-option="required:true" /></td>
             </tr>
         </table>
-        <p >第二题输入框，单词之间务必用逗号隔开</p>
+        <p >第三题</p>
         <table  style="border: 0px; font-size: 12px;padding-bottom: 30px">
             <tr id="word2">
                 <td><input id="word2_0" name="word2_0" style="width: 60px;height: 30px" data-option="required:true" /></td>
@@ -217,9 +222,14 @@
                 <td><input id="str2_7"  name="str2_7"  style="width: 60px;height: 30px" data-option="required:true" /></td>
             </tr>
         </table>
-                </div>
 
-        <input type="button" class="a" value="提交" onclick="document.getElementById('queryForm').submit();"/>
+
+                <div style="margin-top:30px;margin-bottom:50px;text-align:center; vertical-align:middle;">
+                    <input type="button" value="提交" style="width:200px; height:50px; border-top:1px solid green; border-left:1px solid green; background-color:#CCC; color:blue;"
+                           onclick="document.getElementById('queryForm').submit();"/>
+                </div>
+            </div>
+
     </form>
 </div>
 </body>

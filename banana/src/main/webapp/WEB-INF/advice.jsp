@@ -6,5 +6,10 @@
 </head>
 <body>
 ${msg}
+<form id="return" action="/index/toIndex" method="post"></form>
+<div style="margin-top:30px;margin-bottom:50px;text-align:center; vertical-align:middle;">
+    <input type="button" value="返回" style="width:200px; height:50px; border-top:1px solid green; border-left:1px solid green; background-color:#CCC; color:blue;"
+           onclick="document.getElementById('return').submit();"/>
+</div>
 </body>
 </html>
