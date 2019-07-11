@@ -477,7 +477,7 @@
                             <w:sz w:val="28"/>
                             <w:szCs w:val="28"/>
                         </w:rPr>
-                        <w:t>${part1.getWordTrunk()[0].start}</w:t>
+                        <w:t>${part1.getWordTrunk()[1].start}</w:t>
                     </w:r>
                     <w:r>
                         <w:rPr>
@@ -495,7 +495,7 @@
                             <w:sz w:val="28"/>
                             <w:szCs w:val="28"/>
                         </w:rPr>
-                        <w:t>${part1.getWordTrunk()[0].end}</w:t>
+                        <w:t>${part1.getWordTrunk()[1].end}</w:t>
                     </w:r>
                 </w:p>
             </w:tc>

@@ -6,6 +6,8 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,19 +18,20 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.*;
 
 @RequestMapping("/index")
 @Controller
 public class IndexController {
-
+    private static Log logger = LogFactory.getLog(IndexController.class);
 
     @Autowired
     private PartTwoService partTwoService;
 
 
     @RequestMapping(value="/doJob",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
-    public ModelAndView doJob(HttpServletRequest request) throws Exception {
+    public ModelAndView doJob(HttpServletRequest request,HttpServletResponse response) throws Exception {
         ModelAndView modelAndView = new ModelAndView();
 
 
@@ -57,7 +60,15 @@ public class IndexController {
         //1
         Map<String, Object> dataMap = new HashMap<>();
         try {
+            System.out.println("check part1");
             List<PartOneResult> part1Results = initIntervalArr(request);
+            if (!checkArrIllage(part1Results)){
+                msg="请检查第一题赋值";
+                modelAndView.addObject("msg",msg);
+                modelAndView.setViewName("advice");
+                return modelAndView;
+            }
+
             part1Results = getPart1Answ(part1Results, part1AnswerCnt);
             dataMap.put("part1Results", part1Results);
         }catch (Exception e){
@@ -67,37 +78,46 @@ public class IndexController {
             return modelAndView;
         }
         //2
-        try {
+
             List<PartTwoResult> part2Result = initP2Result(request,part2AnswerCnt);
-            dataMap.put("part2Result",part2Result);
-        }catch (Exception e){
+        boolean flag = checkp2Illage(part2Result);
+        if (!flag){
             msg="请检查第二题赋值";
             modelAndView.addObject("msg",msg);
             modelAndView.setViewName("advice");
             return modelAndView;
         }
-
-
-
+            dataMap.put("part2Result",part2Result);
         //3
 
         try {
+            logger.info("coming part3");
             List<PartThreeResult> resultList = initWordStrArr(request);
             getPart3Answ(resultList,part3AnswerCnt);
 
             for (PartThreeResult result:resultList){
+                    StringBuffer sb = new StringBuffer();
+                for (String str:result.getStrTrunk()) {
+                    sb.append(str);
+                }
                 List<Part3Print> part3PrintList = result.getPart3PrintList();
                 for (Part3Print print:part3PrintList){
                     String[] p3m = new String[5];
-                    System.out.println("key= " + print.getQuesTrunk() + " and value= " + print.getAnswer());
+                    logger.info("key= " + print.getQuesTrunk() + " and value= " + print.getAnswer());
                     int intKey = (int)(Math.random()*5);
                     String p3answer = transferAnsw(intKey);
                     for (int k=0;k<5;k++){
                         if (k!=intKey){
-                            p3m[k] = sortString(print.getAnswer());
-                            while (p3m[k].equals(print.getAnswer())){
-                                p3m[k] = sortString(print.getAnswer());
+                            for (;;){
+                                String a = sortString(sb.toString()).substring(0,4);
+                                if (a.equals(print.getAnswer()) || Arrays.asList(p3m).contains(a)){
+                                    continue;
+                                }else {
+                                    p3m[k] = a;
+                                    break;
+                                }
                             }
+
                         }
                         if (k==intKey){
                             p3m[k] = print.getAnswer();
@@ -109,6 +129,7 @@ public class IndexController {
                     print.setChooseD(p3m[3]);
                     print.setChooseE(p3m[4]);
                     print.setAnswer(p3answer);
+                    logger.info("print :"+print.toString());
                 }
             }
 
@@ -120,11 +141,37 @@ public class IndexController {
             return modelAndView;
         }
 
-        createDoc(dataMap,doc);
+
+        logger.info("createdDoc start");
+        createDoc(dataMap,doc,response);
+        logger.info("createdDoc end");
+
         msg="成功导出文档，路径为:"+doc;
         modelAndView.addObject("msg",msg);
         modelAndView.setViewName("advice");
         return modelAndView;
+    }
+
+    private boolean checkArrIllage(List<PartOneResult> part1Results) {
+        for (PartOneResult result:part1Results) {
+
+            for (Interval interval:result.getWordTrunk()) {
+                int cnt = 0;
+                if (interval.getStart()>=interval.getEnd()){
+                    return false;
+                }
+                for (Interval compareInterval:result.getWordTrunk()) {
+                  if (!iscomplax(interval,compareInterval)){
+                      cnt++;
+                  }
+                  if (cnt==2){
+                      return false;
+                  }
+
+                }
+            }
+        }
+        return true;
     }
 
     @RequestMapping(value="/toIndex",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
@@ -258,6 +305,7 @@ public class IndexController {
                 System.out.println("是有合法："+flag);
                 initQues(result,quesNum);
             }
+
         return partTwoResults;
     }
 
@@ -304,9 +352,11 @@ public class IndexController {
         return quesMap;
     }
     public void getPart2Answ(PartTwoResult result,int num){
+        logger.info("coming in getPart2Answ ====");
         List<String> trunkWordList = Arrays.asList(result.getWordTrunk());
+        logger.info("the dirPath of part2.txt:"+this.getClass().getClassLoader().getResource("part2.txt").getPath());
         String mistakePath = this.getClass().getClassLoader().getResource("part2.txt").getPath();//获取文件路径
-        System.out.println("the dirPath of part2.txt:"+mistakePath);
+        logger.info("获取part2路径成功:"+mistakePath);
 
         Map<String, String> answerMap = new HashMap<> ();
         List<String>  misStringList= BananaUtils.readSrcWord(mistakePath);
@@ -410,15 +460,17 @@ public class IndexController {
         return  out;
     }
 
-    public  void createDoc(Map<String,Object> dataMap,String fileName) throws IOException {
+    public  void createDoc(Map<String,Object> dataMap,String savaPath,HttpServletResponse response) throws IOException {
         Configuration configuration = new Configuration();
         configuration.setDefaultEncoding("utf-8");
         //dataMap 要填入模本的数据文件
         //设置模本装置方法和路径,FreeMarker支持多种模板装载方法。可以重servlet，classpath，数据库装载，
         //这里我们的模板是放在template包下面
         /** 加载文件 **/
-//        configuration.setClassForTemplateLoading(this.getClass(), "/template");
 
+        String filename = savaPath.substring(savaPath.lastIndexOf("/")+1);
+        response.setCharacterEncoding("utf-8");
+        response.setHeader("Content-Disposition", "attachment;" + " filename=" + filename);
         String templateFolder = this.getClass().getClassLoader().getResource("").getPath();
         System.out.println(this.getClass().getClassLoader().getResource("").getPath());
         configuration.setDirectoryForTemplateLoading(new File(templateFolder));
@@ -426,28 +478,11 @@ public class IndexController {
         Template t=null;
         try {
             //test.ftl为要装载的模板
-            t = configuration.getTemplate("temp2.ftl");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            t = configuration.getTemplate("temp2.ftl","UTF-8");
         //输出文档路径及名称
-        File outFile = new File(fileName);
-        Writer out = null;
-        FileOutputStream fos=null;
-        try {
-            fos = new FileOutputStream(outFile);
-            OutputStreamWriter oWriter = new OutputStreamWriter(fos,"UTF-8");
-            //这个地方对流的编码不可或缺，使用main（）单独调用时，应该可以，但是如果是web请求导出时导出后word文档就会打不开，并且包XML文件错误。主要是编码格式不正确，无法解析。
-            //out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile)));
-            out = new BufferedWriter(oWriter);
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
-        }
-
-        try {
-            t.process(dataMap, out);
+            Writer out = response.getWriter();
+            t.process(dataMap,out);
             out.close();
-            fos.close();
         } catch (TemplateException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -458,6 +493,7 @@ public class IndexController {
     }
 
     private List<PartTwoResult> initP2Result(HttpServletRequest request,int part2AnswerCnt){
+        logger.info("进入init2resule方法");
         List<PartTwoResult> resultList = new ArrayList<>();
         try {
         for (int i=1;i<=2;i++){
@@ -475,6 +511,24 @@ public class IndexController {
             System.out.println("你输了什么玩意，怎么转换还乱码了呢？");
         }
         return resultList;
+    }
+
+    private  boolean iscomplax(Interval a,Interval b){
+        int numA = a.getStart()>b.getStart()?a.getStart():b.getStart();
+        int numB = a.getEnd()<b.getEnd()?a.getEnd():b.getEnd();
+        if (numA<=numB){
+            return false;
+        }
+        return true;
+    }
+
+    private  boolean checkp2Illage(List<PartTwoResult> part2Result){
+        for (PartTwoResult result:part2Result){
+            if (result.getWordTrunk().length!=15){
+                return false;
+            }
+        }
+        return true;
     }
 }
 
